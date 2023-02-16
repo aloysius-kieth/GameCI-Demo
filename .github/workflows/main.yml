@@ -60,3 +60,42 @@ jobs:
           PRE_RELEASE: 'false'
           CHANGELOG_FILE: 'CHANGELOG.md'
           ALLOW_EMPTY_CHANGELOG: 'false'
+
+  github-release:
+    name: Upload to github releases
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Release url
+        id: get_release
+        uses: bruceadams/get-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: echo ${{ steps.get_release.outputs.upload_url }}
+
+      - name: Get latest release version number
+        id: get_version
+        uses: battila7/get-version-action@master
+
+      - run: echo ${{ steps.get_version.outputs.version }}
+
+      - name: Download build
+        uses: actions/download-artifact@main
+        with:
+          name: Build
+
+      - name: Archive build
+        uses: thedoctor0/zip-release@main
+        with:
+          filename: release.zip
+          exclusions: '*.git* /*node_modules/*'
+
+      - name: Upload asset to Github Release
+        uses: actions/upload-release-asset@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./release.zip
+          asset_name: release-v${{ steps.get_version.outputs.version }}.zip
+          asset_content_type: application/zip
