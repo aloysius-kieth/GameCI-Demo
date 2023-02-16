@@ -67,7 +67,7 @@ jobs:
     steps:
       - name: Get Release url
         id: get_release
-        uses: bruceadams/get-release@main
+        uses: bruceadams/get-release@v1.3.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -75,23 +75,23 @@ jobs:
 
       - name: Get latest release version number
         id: get_version
-        uses: battila7/get-version-action@master
+        uses: battila7/get-version-action@v2.2.1
 
       - run: echo ${{ steps.get_version.outputs.version }}
 
       - name: Download build
-        uses: actions/download-artifact@main
+        uses: actions/download-artifact@v2
         with:
           name: Build
 
       - name: Archive build
-        uses: thedoctor0/zip-release@main
+        uses: thedoctor0/zip-release@0.7.1
         with:
           filename: release.zip
           exclusions: '*.git* /*node_modules/*'
 
       - name: Upload asset to Github Release
-        uses: actions/upload-release-asset@main
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
