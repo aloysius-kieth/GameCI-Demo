@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.0.7] - 2023-02-17
+### Changed
+
+- Update workflow
+- Update CHANGELOG
+
 ## [0.0.6] - 2023-02-17
 ### Changed
 
